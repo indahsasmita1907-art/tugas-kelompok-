@@ -59,38 +59,30 @@ END PROSEDUR
 
 # 4. Implementasi Program (Python)
 Berikut adalah kode yang sudah disempurnakan dengan menu interaktif:
-
 Python
 import datetime
 import math
-
 class SistemParkir:
     def __init__(self):
         self.data_parkir = {}
         self.tarif_per_jam = 3000
-
     def masuk(self, plat):
         if plat in self.data_parkir:
             print(f"\n[!] Kendaraan {plat} sudah terdaftar di dalam.")
         else:
             self.data_parkir[plat] = datetime.datetime.now()
             print(f"\n[OK] Kendaraan {plat} berhasil masuk pada {self.data_parkir[plat].strftime('%H:%M:%S')}")
-
     def keluar(self, plat):
         if plat not in self.data_parkir:
             print(f"\n[!] Plat {plat} tidak ditemukan.")
             return
-
         waktu_masuk = self.data_parkir.pop(plat)
-        waktu_keluar = datetime.datetime.now()
-        
+        waktu_keluar = datetime.datetime.now()      
         selisih = waktu_keluar - waktu_masuk
         detik = selisih.total_seconds()
-        
         # Logika: Minimal bayar 1 jam, selebihnya pembulatan ke atas
         jam = math.ceil(detik / 3600) if detik > 0 else 1
         total_bayar = jam * self.tarif_per_jam
-
         print("\n" + "="*25)
         print("      STRUK PARKIR      ")
         print("="*25)
@@ -111,7 +103,6 @@ def main():
         print("3. Lihat Kendaraan Terparkir")
         print("4. Keluar Aplikasi")
         pilihan = input("Pilih menu (1-4): ")
-
         if pilihan == '1':
             plat = input("Masukkan Plat Nomor: ").upper()
             app.masuk(plat)
@@ -125,7 +116,6 @@ def main():
             break
         else:
             print("Pilihan tidak valid.")
-
 if __name__ == "__main__":
     main()
 
