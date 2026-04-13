@@ -1,132 +1,133 @@
 # tugas-kelompok-
-LAPORAN SISTEM PARKIR SEDERHANA
+Nama Kelompok : 
+Ni Putu Indahning Sasmita (2501010104)
+Maria Indriani Lelu (2501010335)
+
 1. Pendahuluan
+1.1 Latar Belakang
+Peningkatan jumlah kendaraan bermotor seringkali tidak sebanding dengan ketersediaan lahan parkir yang memadai. Pengelolaan parkir secara manual menggunakan pencatatan kertas rentan terhadap kesalahan manusia (human error), kehilangan data, dan potensi kebocoran pendapatan. Oleh karena itu, diperlukan sistem digital sederhana yang dapat mencatat waktu secara otomatis dan menghitung tarif dengan akurat untuk meningkatkan efisiensi operasional.
 
-Perkembangan teknologi informasi mendorong berbagai sistem manual untuk beralih menjadi sistem terkomputerisasi, termasuk dalam pengelolaan parkir. Sistem parkir yang masih dilakukan secara manual seringkali menimbulkan berbagai permasalahan, seperti ketidakteraturan antrian kendaraan, kesulitan dalam memantau kapasitas parkir, serta kurang efisien dalam proses keluar masuk kendaraan.
+1.2 Rumusan Masalah
+Bagaimana cara mencatat waktu masuk dan keluar kendaraan secara otomatis?
+Bagaimana logika perhitungan tarif parkir berdasarkan durasi waktu yang tepat?
+Bagaimana cara mengelola data kendaraan yang sedang berada di dalam area parkir?
 
-Untuk mengatasi permasalahan tersebut, diperlukan suatu sistem yang mampu mengelola antrian kendaraan secara terstruktur. Salah satu solusi yang dapat digunakan adalah dengan menerapkan konsep struktur data, khususnya queue (antrian) dengan metode FIFO (First In First Out).
+1.3 Tujuan
+Membangun aplikasi parkir yang dapat melakukan pencatatan data kendaraan (plat nomor).
+Mengotomatisasi perhitungan biaya parkir berdasarkan selisih waktu masuk dan keluar.
+Menyediakan laporan sederhana mengenai status kendaraan yang terparkir.
 
-Pada penelitian ini, dirancang sebuah sistem parkir sederhana menggunakan linked list sebagai struktur penyimpanan data. Dengan sistem ini, kendaraan yang pertama masuk akan menjadi kendaraan pertama yang keluar, sehingga proses parkir menjadi lebih teratur dan efisien.
+2. Landasan Teori
+Manajemen Data: Menggunakan struktur data Dictionary pada Python untuk menyimpan pasangan kunci (plat nomor) dan nilai (waktu masuk) guna akses data yang cepat (O(1) time complexity).
+Pemrosesan Waktu: Menggunakan library datetime untuk manipulasi data waktu (objek timestamp).
+Logika Tarif: Menerapkan pembulatan ke atas (metode ceiling) di mana setiap bagian dari satu jam yang dilewati akan dihitung sebagai satu jam penuh.
 
-2. Isi (Pembahasan)
-2.1 Rumusan Masalah
-Bagaimana penerapan struktur data queue dalam sistem parkir sederhana?
-Bagaimana sistem mengelola antrian kendaraan masuk dan keluar?
-Bagaimana implementasi linked list dalam sistem parkir?
-2.2 Landasan Teori
+3. Desain dan Implementasi Sistem
+3.1 Alur Kerja (Flowchart)
+Input: User memasukkan plat nomor kendaraan.
+Proses Masuk: Sistem memeriksa apakah plat sudah ada. Jika belum, catat datetime.now().
+Proses Keluar: Sistem mencari plat di database, menghitung selisih waktu, dan menentukan biaya.
+Output: Menampilkan struk parkir atau total biaya.
 
-Struktur data merupakan cara untuk menyimpan dan mengorganisir data agar dapat digunakan secara efisien. Salah satu struktur data yang sering digunakan dalam kehidupan sehari-hari adalah queue, yaitu struktur data yang menerapkan prinsip FIFO (First In First Out), di mana data yang pertama masuk akan menjadi data yang pertama keluar.
+3.2 Pseudocode
+Plaintext
+ALGORITMA Sistem_Parkir
+VAR
+    daftar_parkir: DICTIONARY OF <string, datetime>
+    TARIF_PER_JAM: INTEGER = 3000
 
-Queue banyak digunakan dalam berbagai sistem, seperti antrian layanan pelanggan, sistem printer, dan sistem parkir. Dalam implementasinya, queue dapat menggunakan array maupun linked list. Namun, linked list memiliki keunggulan dalam hal fleksibilitas ukuran karena tidak memiliki batasan kapasitas tetap seperti array.
+PROSEDUR Masuk(plat_nomor)
+    JIKA plat_nomor ADA DI daftar_parkir MAKA
+        TAMPILKAN "Kendaraan sudah ada"
+    SELAIN ITU
+        daftar_parkir[plat_nomor] = WAKTU_SEKARANG
+        TAMPILKAN "Kendaraan masuk"
+    AKHIR JIKA
+END PROSEDUR
+PROSEDUR Keluar(plat_nomor)
+    JIKA plat_nomor TIDAK ADA MAKA
+        TAMPILKAN "Data tidak ditemukan"
+    SELAIN ITU
+        waktu_masuk = daftar_parkir[plat_nomor]
+        durasi = WAKTU_SEKARANG - waktu_masuk
+        total_jam = CEIL(durasi_dalam_detik / 3600)
+        total_bayar = total_jam * TARIF_PER_JAM
+        HAPUS daftar_parkir[plat_nomor]
+        TAMPILKAN total_bayar
+    AKHIR JIKA
+END PROSEDUR
 
-Linked list adalah struktur data yang terdiri dari kumpulan node, di mana setiap node berisi data dan referensi ke node berikutnya. Dengan menggunakan linked list, proses penambahan dan penghapusan data dapat dilakukan secara dinamis tanpa perlu menggeser elemen seperti pada array.
+4. Implementasi Program (Python)
+Berikut adalah kode yang sudah disempurnakan dengan menu interaktif:
 
-2.3 Desain Sistem
-Alur Sistem:
+Python
+import datetime
+import math
 
-Input → Proses → Output
+class SistemParkir:
+    def __init__(self):
+        self.data_parkir = {}
+        self.tarif_per_jam = 3000
 
-Input: nomor plat kendaraan
-Proses: tambah/hapus data (enqueue & dequeue)
-Output: daftar kendaraan parkir
-
-2.4 Implementasi Sistem 
-# Node Linked List
-class Node:
-    def _init_(self, plat):
-        self.plat = plat
-        self.next = None
-
-# Queue Parkir
-class Parkir:
-    def _init_(self, kapasitas):
-        self.front = None
-        self.rear = None
-        self.kapasitas = kapasitas
-        self.jumlah = 0
-
-    # Kendaraan masuk (Enqueue)
     def masuk(self, plat):
-        if self.jumlah >= self.kapasitas:
-            print("Parkir penuh!")
-            return
-        
-        new_node = Node(plat)
-
-        if self.rear is None:
-            self.front = self.rear = new_node
+        if plat in self.data_parkir:
+            print(f"\n[!] Kendaraan {plat} sudah terdaftar di dalam.")
         else:
-            self.rear.next = new_node
-            self.rear = new_node
+            self.data_parkir[plat] = datetime.datetime.now()
+            print(f"\n[OK] Kendaraan {plat} berhasil masuk pada {self.data_parkir[plat].strftime('%H:%M:%S')}")
 
-        self.jumlah += 1
-        print(f"Kendaraan {plat} masuk")
-
-    # Kendaraan keluar (Dequeue)
-    def keluar(self):
-        if self.front is None:
-            print("Parkir kosong!")
+    def keluar(self, plat):
+        if plat not in self.data_parkir:
+            print(f"\n[!] Plat {plat} tidak ditemukan.")
             return
+
+        waktu_masuk = self.data_parkir.pop(plat)
+        waktu_keluar = datetime.datetime.now()
         
-        keluar = self.front
-        self.front = self.front.next
+        selisih = waktu_keluar - waktu_masuk
+        detik = selisih.total_seconds()
+        
+        # Logika: Minimal bayar 1 jam, selebihnya pembulatan ke atas
+        jam = math.ceil(detik / 3600) if detik > 0 else 1
+        total_bayar = jam * self.tarif_per_jam
 
-        if self.front is None:
-            self.rear = None
+        print("\n" + "="*25)
+        print("      STRUK PARKIR      ")
+        print("="*25)
+        print(f"Plat Nomor  : {plat}")
+        print(f"Jam Masuk   : {waktu_masuk.strftime('%H:%M:%S')}")
+        print(f"Jam Keluar  : {waktu_keluar.strftime('%H:%M:%S')}")
+        print(f"Durasi      : {jam} Jam")
+        print(f"Total Bayar : Rp{total_bayar:,}")
+        print("="*25)
 
-        self.jumlah -= 1
-        print(f"Kendaraan {keluar.plat} keluar")
+# Fungsi Utama (Main Menu)
+def main():
+    app = SistemParkir()
+    while True:
+        print("\n--- MENU PARKIR SEDERHANA ---")
+        print("1. Kendaraan Masuk")
+        print("2. Kendaraan Keluar")
+        print("3. Lihat Kendaraan Terparkir")
+        print("4. Keluar Aplikasi")
+        pilihan = input("Pilih menu (1-4): ")
 
-    # Lihat kendaraan depan
-    def peek(self):
-        if self.front is None:
-            print("Parkir kosong!")
+        if pilihan == '1':
+            plat = input("Masukkan Plat Nomor: ").upper()
+            app.masuk(plat)
+        elif pilihan == '2':
+            plat = input("Masukkan Plat Nomor: ").upper()
+            app.keluar(plat)
+        elif pilihan == '3':
+            print("\nDaftar Kendaraan di Dalam:")
+            for p in app.data_parkir: print(f"- {p}")
+        elif pilihan == '4':
+            break
         else:
-            print(f"Kendaraan terdepan: {self.front.plat}")
+            print("Pilihan tidak valid.")
 
-    # Tampilkan semua
-    def display(self):
-        if self.front is None:
-            print("Parkir kosong!")
-            return
-        
-        current = self.front
-        print("Daftar kendaraan:")
-        while current:
-            print(current.plat)
-            current = current.next
+if __name__ == "__main__":
+    main()
 
-
-# Program utama
-parkir = Parkir(5)
-
-while True:
-    print("\n1. Masuk")
-    print("2. Keluar")
-    print("3. Peek")
-    print("4. Tampilkan")
-    print("5. Keluar Program")
-
-    pilih = input("Pilih: ")
-
-    if pilih == "1":
-        plat = input("Plat nomor: ")
-        parkir.masuk(plat)
-    elif pilih == "2":
-        parkir.keluar()
-    elif pilih == "3":
-        parkir.peek()
-    elif pilih == "4":
-        parkir.display()
-    elif pilih == "5":
-        break
-    else:
-        print("Pilihan salah!")
-
-3. Kesimpulan
-
-Berdasarkan hasil perancangan dan implementasi sistem parkir sederhana, dapat disimpulkan bahwa penggunaan struktur data queue dengan metode FIFO mampu mengelola antrian kendaraan secara teratur dan sistematis.
-
-Implementasi menggunakan linked list memberikan fleksibilitas dalam pengelolaan data karena tidak memiliki batasan ukuran tetap, sehingga lebih efisien dibandingkan array dalam kasus tertentu.
-
-Sistem yang dibangun telah mampu menjalankan fungsi utama, yaitu menambahkan kendaraan, mengeluarkan kendaraan, menampilkan data, serta melihat kendaraan terdepan. Dengan demikian, sistem parkir sederhana ini telah berhasil memenuhi tujuan dan sesuai dengan konsep teori struktur data
+    5. Kesimpulan
+Sistem ini berhasil mengimplementasikan fungsi dasar pengelolaan parkir dengan memanfaatkan struktur data yang efisien dan modul waktu pada Python. Meskipun sederhana, sistem ini memiliki pondasi yang kuat untuk dikembangkan lebih lanjut, seperti penambahan kategori kendaraan (mobil/motor) atau integrasi dengan database fisik.
