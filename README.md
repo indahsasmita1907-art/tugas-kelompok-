@@ -1,9 +1,9 @@
 # tugas-kelompok-
-Nama Kelompok : 
+# Nama Kelompok : 
 Ni Putu Indahning Sasmita (2501010104)
 Maria Indriani Lelu (2501010335)
 
-1. Pendahuluan
+# 1. Pendahuluan
 1.1 Latar Belakang
 Peningkatan jumlah kendaraan bermotor seringkali tidak sebanding dengan ketersediaan lahan parkir yang memadai. Pengelolaan parkir secara manual menggunakan pencatatan kertas rentan terhadap kesalahan manusia (human error), kehilangan data, dan potensi kebocoran pendapatan. Oleh karena itu, diperlukan sistem digital sederhana yang dapat mencatat waktu secara otomatis dan menghitung tarif dengan akurat untuk meningkatkan efisiensi operasional.
 
@@ -17,19 +17,19 @@ Membangun aplikasi parkir yang dapat melakukan pencatatan data kendaraan (plat n
 Mengotomatisasi perhitungan biaya parkir berdasarkan selisih waktu masuk dan keluar.
 Menyediakan laporan sederhana mengenai status kendaraan yang terparkir.
 
-2. Landasan Teori
+# 2. Landasan Teori
 Manajemen Data: Menggunakan struktur data Dictionary pada Python untuk menyimpan pasangan kunci (plat nomor) dan nilai (waktu masuk) guna akses data yang cepat (O(1) time complexity).
 Pemrosesan Waktu: Menggunakan library datetime untuk manipulasi data waktu (objek timestamp).
 Logika Tarif: Menerapkan pembulatan ke atas (metode ceiling) di mana setiap bagian dari satu jam yang dilewati akan dihitung sebagai satu jam penuh.
 
-3. Desain dan Implementasi Sistem
+# 3. Desain dan Implementasi Sistem
 3.1 Alur Kerja (Flowchart)
 Input: User memasukkan plat nomor kendaraan.
 Proses Masuk: Sistem memeriksa apakah plat sudah ada. Jika belum, catat datetime.now().
 Proses Keluar: Sistem mencari plat di database, menghitung selisih waktu, dan menentukan biaya.
 Output: Menampilkan struk parkir atau total biaya.
 
-3.2 Pseudocode
+# 3.2 Pseudocode
 Plaintext
 ALGORITMA Sistem_Parkir
 VAR
@@ -57,7 +57,7 @@ PROSEDUR Keluar(plat_nomor)
     AKHIR JIKA
 END PROSEDUR
 
-4. Implementasi Program (Python)
+# 4. Implementasi Program (Python)
 Berikut adalah kode yang sudah disempurnakan dengan menu interaktif:
 
 Python
@@ -129,5 +129,5 @@ def main():
 if __name__ == "__main__":
     main()
 
-    5. Kesimpulan
+# 5. Kesimpulan
 Sistem ini berhasil mengimplementasikan fungsi dasar pengelolaan parkir dengan memanfaatkan struktur data yang efisien dan modul waktu pada Python. Meskipun sederhana, sistem ini memiliki pondasi yang kuat untuk dikembangkan lebih lanjut, seperti penambahan kategori kendaraan (mobil/motor) atau integrasi dengan database fisik.
