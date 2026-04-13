@@ -1,0 +1,114 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyOltBwqXkoEM0at/dkriYbZ",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/indahsasmita1907-art/tugas-kelompok-/blob/main/python%20\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import datetime\n",
+        "\n",
+        "# Database sederhana untuk menyimpan data kendaraan yang sedang parkir\n",
+        "# Format: { plat_nomor: waktu_masuk }\n",
+        "database_parkir = {}\n",
+        "\n",
+        "# Konfigurasi Tarif\n",
+        "TARIF_PER_JAM = 3000\n",
+        "\n",
+        "def kendaraan_masuk(plat_nomor):\n",
+        "    if plat_nomor in database_parkir:\n",
+        "        print(f\"Kendaraan {plat_nomor} sudah ada di dalam area parkir.\")\n",
+        "    else:\n",
+        "        waktu_sekarang = datetime.datetime.now()\n",
+        "        database_parkir[plat_nomor] = waktu_sekarang\n",
+        "        print(f\"--- TIKET MASUK ---\")\n",
+        "        print(f\"Plat Nomor : {plat_nomor}\")\n",
+        "        print(f\"Waktu Masuk: {waktu_sekarang.strftime('%Y-%m-%d %H:%M:%S')}\")\n",
+        "        print(f\"-------------------\")\n",
+        "\n",
+        "def kendaraan_keluar(plat_nomor):\n",
+        "    if plat_nomor not in database_parkir:\n",
+        "        print(f\"Data kendaraan {plat_nomor} tidak ditemukan!\")\n",
+        "        return\n",
+        "\n",
+        "    waktu_masuk = database_parkir.pop(plat_nomor)\n",
+        "    waktu_keluar = datetime.datetime.now()\n",
+        "\n",
+        "    # Menghitung selisih waktu\n",
+        "    selisih = waktu_keluar - waktu_masuk\n",
+        "    durasi_detik = selisih.total_seconds()\n",
+        "\n",
+        "    # Konversi ke jam (dibulatkan ke atas)\n",
+        "    # Untuk simulasi, kita gunakan pembulatan minimal 1 jam\n",
+        "    durasi_jam = max(1, int(durasi_detik // 3600) + (1 if durasi_detik % 3600 > 0 else 0))\n",
+        "\n",
+        "    total_biaya = durasi_jam * TARIF_PER_JAM\n",
+        "\n",
+        "    print(f\"--- STRUK KELUAR ---\")\n",
+        "    print(f\"Plat Nomor   : {plat_nomor}\")\n",
+        "    print(f\"Durasi Parkir: {durasi_jam} Jam\")\n",
+        "    print(f\"Total Biaya  : Rp{total_biaya}\")\n",
+        "    print(f\"--------------------\")\n",
+        "\n",
+        "# --- SIMULASI PENGGUNAAN ---\n",
+        "# 1. Kendaraan masuk\n",
+        "kendaraan_masuk(\"B 1234 ABC\")\n",
+        "\n",
+        "# 2. Coba cek kendaraan yang sama masuk lagi\n",
+        "kendaraan_masuk(\"B 1234 ABC\")\n",
+        "\n",
+        "# 3. Kendaraan keluar (Menghitung biaya)\n",
+        "kendaraan_keluar(\"B 1234 ABC\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "zEuLKLlHI3ar",
+        "outputId": "d9b0be4f-8d05-4c3c-82be-31c5bfdd6de6"
+      },
+      "execution_count": 2,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "--- TIKET MASUK ---\n",
+            "Plat Nomor : B 1234 ABC\n",
+            "Waktu Masuk: 2026-04-13 04:39:53\n",
+            "-------------------\n",
+            "Kendaraan B 1234 ABC sudah ada di dalam area parkir.\n",
+            "--- STRUK KELUAR ---\n",
+            "Plat Nomor   : B 1234 ABC\n",
+            "Durasi Parkir: 1 Jam\n",
+            "Total Biaya  : Rp3000\n",
+            "--------------------\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
